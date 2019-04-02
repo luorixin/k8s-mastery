@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  sa-logic:
+    build:
+      context: ./sa-logic
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - sanet
+  sa-web:
+    build:
+      context: ./sa-webapp
+      dockerfile: ./Dockerfile
+    ports:
+      - "91:8080"
+    environment:
+      - SA_LOGIC_API_URL=http://192.168.118.152:5000
+    networks:
+      - sanet
+  sa-frontend:
+    build:
+      context: ./sa-frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - "90:80"
+    volumes:
+      - /Users/Jacob/Documents/work/docker/k8s-mastery/sa-frontend/build:/usr/share/nginx/html
+    networks:
+      - sanet
+
+networks:
+  sanet:
+    driver: bridge
